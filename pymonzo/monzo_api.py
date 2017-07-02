@@ -274,22 +274,7 @@ class MonzoAPI(object):
 
         return MonzoBalance(data=response.json())
 
-    def transactions(self, account_id=None, reverse=True, limit=None):
-        """
-        Returns a list of transactions on the user's account.
-
-        Official docs:
-            https://monzo.com/docs/#list-transactions
-
-        :param account_id: Monzo account ID
-        :type account_id: str
-        :param reverse: whether transactions should be in in descending order
-        :type reverse: bool
-        :param limit: how many transactions should be returned; None for all
-        :type limit: int
-        :returns: list of Monzo transactions
-        :rtype: list of MonzoTransaction
-        """
+    def _raw_transactions(self, account_id=None, reverse=True, limit=None):
         if not account_id and not self.default_account_id:
             raise ValueError("You need to pass account ID")
         elif not account_id and self.default_account_id:
@@ -314,6 +299,25 @@ class MonzoAPI(object):
         if limit:
             transactions = transactions[:limit]
 
+        return transactions
+
+    def transactions(self, account_id=None, reverse=True, limit=None):
+        """
+        Returns a list of transactions on the user's account.
+
+        Official docs:
+            https://monzo.com/docs/#list-transactions
+
+        :param account_id: Monzo account ID
+        :type account_id: str
+        :param reverse: whether transactions should be in in descending order
+        :type reverse: bool
+        :param limit: how many transactions should be returned; None for all
+        :type limit: int
+        :returns: list of Monzo transactions
+        :rtype: list of MonzoTransaction
+        """
+        transactions = self._raw_transactions(account_id=account_id, reverse=reverse, limit=limit)
         return [MonzoTransaction(data=t) for t in transactions]
 
     def transaction(self, transaction_id, expand_merchant=False):
