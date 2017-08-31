@@ -58,6 +58,9 @@ class MonzoAccount(MonzoObject):
         # Map the rest of the fields automatically
         self.__dict__.update(**data)
 
+    def __str__(self):
+        return str(self.__dict__)
+
 
 class MonzoBalance(MonzoObject):
     """
@@ -113,6 +116,12 @@ class MonzoTransaction(MonzoObject):
 
         # Map the rest of the fields automatically
         self.__dict__.update(**data)
+
+    def __str__(self):
+        return str(self.__dict__)
+
+    def __repr__(self):
+        return repr(self.__dict__)
 
 
 class MonzoMerchant(MonzoObject):
